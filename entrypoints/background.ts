@@ -1,44 +1,53 @@
 import { getSettings, incrementStats } from '@/lib/storage';
 import { getCachedVerdict, setCachedVerdict } from '@/lib/cache';
 import { evaluatePage, estimateTokens } from '@/lib/llm';
-import { SKIP_URL_PREFIXES, BADGE_COLORS } from '@/lib/constants';
+import { SKIP_URL_PREFIXES } from '@/lib/constants';
 import type { PageData, VerdictStatus } from '@/lib/types';
 
 // Track status per tab
 const tabStatus = new Map<number, VerdictStatus>();
+// Track last analyzed URL per tab (prevents duplicate SPA re-analysis)
+const tabLastUrl = new Map<number, string>();
 // Debounce timers per tab
 const debounceTimers = new Map<number, ReturnType<typeof setTimeout>>();
 
+// Icon paths for each state
+const ICON_PATHS = {
+  default: { 16: 'icon/16.png', 32: 'icon/32.png', 48: 'icon/48.png', 128: 'icon/128.png' },
+  read:    { 16: 'icon/read-16.png', 32: 'icon/read-32.png', 48: 'icon/read-48.png', 128: 'icon/read-128.png' },
+  save:    { 16: 'icon/save-16.png', 32: 'icon/save-32.png', 48: 'icon/save-48.png', 128: 'icon/save-128.png' },
+  leave:   { 16: 'icon/leave-16.png', 32: 'icon/leave-32.png', 48: 'icon/leave-48.png', 128: 'icon/leave-128.png' },
+  grey:    { 16: 'icon/grey-16.png', 32: 'icon/grey-32.png', 48: 'icon/grey-48.png', 128: 'icon/grey-128.png' },
+} as const;
+
 export default defineBackground(() => {
-  // --- Badge setup ---
+  // --- Icon + badge setup ---
   function updateBadge(tabId: number, status: VerdictStatus) {
     tabStatus.set(tabId, status);
+    // Clear text badge — we use icon swaps instead
+    chrome.action.setBadgeText({ text: '', tabId });
 
     switch (status.type) {
       case 'loading':
+        chrome.action.setIcon({ path: ICON_PATHS.grey, tabId });
         chrome.action.setBadgeText({ text: '...', tabId });
-        chrome.action.setBadgeBackgroundColor({ color: BADGE_COLORS.loading, tabId });
+        chrome.action.setBadgeBackgroundColor({ color: '#9ca3af', tabId });
         break;
       case 'success': {
         const v = status.verdict;
-        const text = v.verdict === 'Read' ? 'R' : v.verdict === 'Save' ? 'S' : 'L';
-        const color = v.verdict === 'Read' ? BADGE_COLORS.read :
-          v.verdict === 'Save' ? BADGE_COLORS.save : BADGE_COLORS.leave;
-        chrome.action.setBadgeText({ text, tabId });
-        chrome.action.setBadgeBackgroundColor({ color, tabId });
+        const iconKey = v.verdict === 'Read' ? 'read' : v.verdict === 'Save' ? 'save' : 'leave';
+        chrome.action.setIcon({ path: ICON_PATHS[iconKey], tabId });
         break;
       }
       case 'error':
-        chrome.action.setBadgeText({ text: '!', tabId });
-        chrome.action.setBadgeBackgroundColor({ color: BADGE_COLORS.error, tabId });
+        chrome.action.setIcon({ path: ICON_PATHS.grey, tabId });
         break;
       case 'skipped':
-        chrome.action.setBadgeText({ text: '—', tabId });
-        chrome.action.setBadgeBackgroundColor({ color: BADGE_COLORS.skipped, tabId });
+        chrome.action.setIcon({ path: ICON_PATHS.grey, tabId });
         break;
       case 'disabled':
       case 'idle':
-        chrome.action.setBadgeText({ text: '', tabId });
+        chrome.action.setIcon({ path: ICON_PATHS.default, tabId });
         break;
     }
   }
@@ -79,6 +88,12 @@ export default defineBackground(() => {
     }
 
     const url = tab.url || '';
+
+    // Skip if URL hasn't changed (unless force reanalyze)
+    if (!forceReanalyze && tabLastUrl.get(tabId) === url) {
+      return;
+    }
+
     const domain = new URL(url).hostname || '';
 
     // Check skip list
@@ -134,6 +149,7 @@ export default defineBackground(() => {
       const tokens = estimateTokens(pageData.excerpt) + 200; // ~200 for system prompt + response
       await incrementStats(tokens);
 
+      tabLastUrl.set(tabId, url);
       updateBadge(tabId, { type: 'success', verdict });
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Analysis failed.';
@@ -180,6 +196,7 @@ export default defineBackground(() => {
   // Clean up when tab closes
   chrome.tabs.onRemoved.addListener((tabId) => {
     tabStatus.delete(tabId);
+    tabLastUrl.delete(tabId);
     const timer = debounceTimers.get(tabId);
     if (timer) {
       clearTimeout(timer);

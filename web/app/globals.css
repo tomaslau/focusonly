@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-traffic-green: #22c55e;
+  --color-traffic-yellow: #eab308;
+  --color-traffic-red: #ef4444;
+}
+
+/* Apple-style smooth rendering */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+/* Glassmorphism card */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Subtle glow */
+.glow-green {
+  box-shadow: 0 0 80px rgba(34, 197, 94, 0.15);
+}

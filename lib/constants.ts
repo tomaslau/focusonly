@@ -10,7 +10,7 @@ export const DEFAULT_PROFILE: Profile = {
 export const DEFAULT_API_CONFIG: ApiConfig = {
   baseUrl: 'https://api.openai.com/v1',
   apiKey: '',
-  model: 'gpt-4o-mini',
+  model: 'gpt-5-nano',
 };
 
 export const PROFILE_PRESETS: ProfilePreset[] = [

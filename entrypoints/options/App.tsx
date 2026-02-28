@@ -274,6 +274,16 @@ function ProfileTab({ profile, onUpdate }: { profile: Profile; onUpdate: (u: Par
 
 // --- API Tab ---
 
+const OPENAI_MODELS = [
+  { group: 'Recommended', models: [
+    { id: 'gpt-5-nano', label: 'GPT-5 Nano — cheapest ($0.05/1M in)' },
+    { id: 'gpt-5-mini', label: 'GPT-5 Mini — balanced ($0.25/1M in)' },
+    { id: 'gpt-5.2', label: 'GPT-5.2 — most capable ($1.75/1M in)' },
+  ]},
+];
+
+const ALL_MODELS = OPENAI_MODELS.flatMap(g => g.models);
+
 function ApiTab({
   apiConfig,
   onUpdate,
@@ -291,14 +301,14 @@ function ApiTab({
     <div className="space-y-6">
       <Section title="API Endpoint">
         <input
-          type="text"
+          type="url"
           value={apiConfig.baseUrl}
           onChange={(e) => onUpdate({ baseUrl: e.target.value })}
           placeholder="https://api.openai.com/v1"
           className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <p className="text-xs text-gray-400 mt-1">
-          Works with OpenAI, OpenRouter, Groq, Together, or any OpenAI-compatible API
+          Any OpenAI-compatible endpoint (OpenRouter, Groq, Ollama, etc.)
         </p>
       </Section>
 
@@ -316,13 +326,15 @@ function ApiTab({
       </Section>
 
       <Section title="Model">
-        <input
-          type="text"
+        <select
           value={apiConfig.model}
           onChange={(e) => onUpdate({ model: e.target.value })}
-          placeholder="gpt-4o-mini"
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer"
+        >
+          {ALL_MODELS.map(m => (
+            <option key={m.id} value={m.id}>{m.label}</option>
+          ))}
+        </select>
       </Section>
 
       <div>
