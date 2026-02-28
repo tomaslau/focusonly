@@ -1,5 +1,5 @@
 import GithubIcon from '@/components/github-icon';
-import { CHROME_STORE_URL, GITHUB_URL } from '@/lib/config';
+import { GITHUB_URL } from '@/lib/config';
 
 export default function Footer() {
   return (
@@ -8,25 +8,15 @@ export default function Footer() {
         <p className="text-sm text-gray-400">
           FocusOnly — Free &amp; Open Source
         </p>
-        <div className="flex items-center gap-8 text-sm text-gray-400">
-          <a
-            href={GITHUB_URL}
-            className="inline-flex items-center gap-1.5 hover:text-gray-900 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <GithubIcon size={16} />
-            GitHub
-          </a>
-          <a
-            href={CHROME_STORE_URL}
-            className="hover:text-gray-900 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Chrome Web Store
-          </a>
-        </div>
+        <a
+          href={GITHUB_URL}
+          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-900 transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <GithubIcon size={16} />
+          GitHub
+        </a>
       </div>
     </footer>
   );

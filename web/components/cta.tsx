@@ -1,5 +1,5 @@
 import ChromeIcon from '@/components/chrome-icon';
-import { CHROME_STORE_URL } from '@/lib/config';
+import { DOWNLOAD_URL } from '@/lib/config';
 
 export default function CTA() {
   return (
@@ -15,13 +15,11 @@ export default function CTA() {
           Free. Open source. Takes less than a minute.
         </p>
         <a
-          href={CHROME_STORE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={DOWNLOAD_URL}
           className="inline-flex items-center justify-center gap-2.5 h-14 px-10 bg-white text-black font-semibold text-base rounded-full hover:bg-white/90 transition-colors"
         >
           <ChromeIcon size={20} />
-          Add to Chrome — Free
+          Download for Chrome
         </a>
       </div>
     </section>

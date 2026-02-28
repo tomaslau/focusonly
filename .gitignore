@@ -14,6 +14,10 @@ stats-*.json
 .wxt
 web-ext.config.ts
 
+# Private keys and extension signing
+*.pem
+dist.crx
+
 # Next.js
 web/.next
 

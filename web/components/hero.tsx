@@ -1,6 +1,6 @@
 import ChromeIcon from '@/components/chrome-icon';
 import GithubIcon from '@/components/github-icon';
-import { CHROME_STORE_URL, GITHUB_URL } from '@/lib/config';
+import { DOWNLOAD_URL, GITHUB_URL } from '@/lib/config';
 
 export default function Hero() {
   return (
@@ -41,15 +41,13 @@ export default function Hero() {
           One glance at the toolbar tells you: leave, read, or save for later.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <a
-            href={CHROME_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={DOWNLOAD_URL}
             className="inline-flex items-center justify-center gap-2.5 h-14 px-10 bg-white text-black font-semibold text-base rounded-full hover:bg-white/90 transition-colors"
           >
             <ChromeIcon size={20} />
-            Add to Chrome — Free
+            Download for Chrome
           </a>
           <a
             href={GITHUB_URL}
@@ -61,6 +59,14 @@ export default function Hero() {
             View Source
           </a>
         </div>
+
+        <p className="text-white/30 text-xs mb-20">
+          Early access — requires{' '}
+          <a href="#install" className="underline hover:text-white/50 transition-colors">
+            manual install
+          </a>{' '}
+          in developer mode
+        </p>
 
         {/* Floating popup mock with glassmorphism */}
         <div className="mx-auto w-80 rounded-2xl glass glow-green border border-white/10 text-left overflow-hidden">
