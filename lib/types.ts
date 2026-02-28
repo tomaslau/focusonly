@@ -34,11 +34,20 @@ export interface Settings {
 
 // --- Verdict ---
 
+function alignVerdict(score: number): 'Leave' | 'Read' | 'Save' {
+  if (score >= 60) return 'Read';
+  if (score >= 30) return 'Save';
+  return 'Leave';
+}
+
 export const VerdictSchema = z.object({
   verdict: z.enum(['Leave', 'Read', 'Save']),
   score: z.number().min(0).max(100),
   reasons: z.array(z.string()).max(3),
-});
+}).transform((v) => ({
+  ...v,
+  verdict: alignVerdict(v.score),
+}));
 
 export type Verdict = z.infer<typeof VerdictSchema>;
 

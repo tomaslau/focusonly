@@ -45,7 +45,16 @@ function stripMarkdownFences(text: string): string {
   if (cleaned.startsWith('```')) {
     cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?\s*```$/, '');
   }
-  return cleaned.trim();
+  cleaned = cleaned.trim();
+  // Extract JSON object if there's text before/after it
+  if (!cleaned.startsWith('{')) {
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}');
+    if (start !== -1 && end > start) {
+      cleaned = cleaned.slice(start, end + 1);
+    }
+  }
+  return cleaned;
 }
 
 function sleep(ms: number): Promise<void> {
@@ -61,7 +70,7 @@ async function callApi(
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${apiConfig.baseUrl}/chat/completions`, {
+    const response = await fetch(`${apiConfig.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -145,7 +154,7 @@ export async function testConnection(apiConfig: ApiConfig): Promise<{ ok: boolea
   const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
-    const response = await fetch(`${apiConfig.baseUrl}/chat/completions`, {
+    const response = await fetch(`${apiConfig.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

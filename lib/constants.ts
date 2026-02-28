@@ -10,7 +10,7 @@ export const DEFAULT_PROFILE: Profile = {
 export const DEFAULT_API_CONFIG: ApiConfig = {
   baseUrl: 'https://api.openai.com/v1',
   apiKey: '',
-  model: 'gpt-5-nano',
+  model: 'gpt-4o-mini',
 };
 
 export const PROFILE_PRESETS: ProfilePreset[] = [
@@ -119,6 +119,9 @@ export const DEFAULT_SKIP_DOMAINS: string[] = [
   'facebook.com',
   'instagram.com',
   'tiktok.com',
+  'twitter.com',
+  'x.com',
+  'reddit.com',
   // Dev tools
   'github.com',
   'gitlab.com',

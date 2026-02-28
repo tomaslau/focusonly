@@ -14,7 +14,13 @@ function hashString(str: string): string {
 }
 
 export function getCacheKey(url: string, profile: Profile): string {
-  const profileHash = hashString(JSON.stringify(profile));
+  const normalized = {
+    role: profile.role,
+    goals: [...profile.goals].sort(),
+    avoid: [...profile.avoid].sort(),
+    focus: [...profile.focus].sort(),
+  };
+  const profileHash = hashString(JSON.stringify(normalized));
   const urlHash = hashString(url);
   return `${CACHE_KEY_PREFIX}${urlHash}_${profileHash}`;
 }

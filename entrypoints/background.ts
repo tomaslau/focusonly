@@ -94,7 +94,13 @@ export default defineBackground(() => {
       return;
     }
 
-    const domain = new URL(url).hostname || '';
+    let domain: string;
+    try {
+      domain = new URL(url).hostname || '';
+    } catch {
+      updateBadge(tabId, { type: 'skipped', reason: 'Invalid URL' });
+      return;
+    }
 
     // Check skip list
     const skipReason = shouldSkip(url, domain, settings.skipDomains);

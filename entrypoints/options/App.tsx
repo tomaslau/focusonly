@@ -276,13 +276,17 @@ function ProfileTab({ profile, onUpdate }: { profile: Profile; onUpdate: (u: Par
 
 const OPENAI_MODELS = [
   { group: 'Recommended', models: [
+    { id: 'gpt-4o-mini', label: 'GPT-4o Mini — reliable & cheap ($0.15/1M in)' },
     { id: 'gpt-5-nano', label: 'GPT-5 Nano — cheapest ($0.05/1M in)' },
     { id: 'gpt-5-mini', label: 'GPT-5 Mini — balanced ($0.25/1M in)' },
-    { id: 'gpt-5.2', label: 'GPT-5.2 — most capable ($1.75/1M in)' },
+  ]},
+  { group: 'More capable', models: [
+    { id: 'gpt-4.1-mini', label: 'GPT-4.1 Mini ($0.40/1M in)' },
+    { id: 'gpt-5', label: 'GPT-5 ($1.25/1M in)' },
+    { id: 'gpt-4.1', label: 'GPT-4.1 ($2.00/1M in)' },
   ]},
 ];
 
-const ALL_MODELS = OPENAI_MODELS.flatMap(g => g.models);
 
 function ApiTab({
   apiConfig,
@@ -331,8 +335,12 @@ function ApiTab({
           onChange={(e) => onUpdate({ model: e.target.value })}
           className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer"
         >
-          {ALL_MODELS.map(m => (
-            <option key={m.id} value={m.id}>{m.label}</option>
+          {OPENAI_MODELS.map(g => (
+            <optgroup key={g.group} label={g.group}>
+              {g.models.map(m => (
+                <option key={m.id} value={m.id}>{m.label}</option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </Section>

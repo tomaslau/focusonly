@@ -75,7 +75,7 @@ function OptionsMock() {
         <div>
           <label className="text-xs font-medium text-gray-500 block mb-1.5">Model</label>
           <div className="px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-900 font-mono">
-            gpt-4o-mini — balanced ($0.15/1M in)
+            gpt-4o-mini — reliable &amp; cheap ($0.15/1M in)
           </div>
         </div>
         {/* Test button */}

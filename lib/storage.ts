@@ -7,7 +7,13 @@ const STATS_KEY = 'focusonly_stats';
 export async function getSettings(): Promise<Settings> {
   const result = await chrome.storage.sync.get(SETTINGS_KEY);
   if (!result[SETTINGS_KEY]) return { ...DEFAULT_SETTINGS };
-  return { ...DEFAULT_SETTINGS, ...result[SETTINGS_KEY] };
+  const stored = result[SETTINGS_KEY] as Partial<Settings>;
+  return {
+    ...DEFAULT_SETTINGS,
+    ...stored,
+    profile: { ...DEFAULT_SETTINGS.profile, ...stored.profile },
+    apiConfig: { ...DEFAULT_SETTINGS.apiConfig, ...stored.apiConfig },
+  };
 }
 
 export async function saveSettings(settings: Settings): Promise<void> {
