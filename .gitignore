@@ -14,9 +14,21 @@ stats-*.json
 .wxt
 web-ext.config.ts
 
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
 # Private keys and extension signing
 *.pem
 dist.crx
+
+# Video project — generated/rendered outputs
+video/node_modules/
+video/out/
+video/.remotion/
+video/bun.lockb
 
 # Next.js
 web/.next
